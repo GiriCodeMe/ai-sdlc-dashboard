@@ -1,0 +1,39 @@
+import { useState, useEffect } from 'react'
+
+const KNOWN_PROJECTS = ['roi-calculator']
+
+export function useMetrics(selectedProject = 'roi-calculator') {
+  const [metricsMap, setMetricsMap] = useState({})
+  const [loading, setLoading]       = useState(true)
+  const [error, setError]           = useState(null)
+
+  useEffect(() => {
+    const base = import.meta.env.BASE_URL ?? '/'
+
+    Promise.all(
+      KNOWN_PROJECTS.map(async (project) => {
+        const url = `${base}metrics/${project}.json`
+        const res = await fetch(url)
+        if (!res.ok) throw new Error(`Failed to load ${url}: ${res.status}`)
+        const json = await res.json()
+        return [project, json]
+      })
+    )
+      .then((entries) => {
+        setMetricsMap(Object.fromEntries(entries))
+        setLoading(false)
+      })
+      .catch((err) => {
+        setError(err.message)
+        setLoading(false)
+      })
+  }, [])
+
+  return {
+    metrics:  metricsMap[selectedProject] ?? null,
+    allMetrics: metricsMap,
+    projects: KNOWN_PROJECTS,
+    loading,
+    error,
+  }
+}
