@@ -1,8 +1,14 @@
 import { useState, useEffect } from 'react'
 
-const KNOWN_PROJECTS = ['roi-calculator']
+// Dynamically discover projects from metrics/*/AIKPI.json at build time.
+// Adding a new project's AIKPI.json to the metrics/ folder is all that's needed.
+const metricModules = import.meta.glob('../../metrics/*/AIKPI.json')
+export const KNOWN_PROJECTS = Object.keys(metricModules)
+  .map(p => p.split('/').at(-2))
+  .filter(Boolean)
+  .sort()
 
-export function useMetrics(selectedProject = 'roi-calculator') {
+export function useMetrics(selectedProject) {
   const [metricsMap, setMetricsMap] = useState({})
   const [loading, setLoading]       = useState(true)
   const [error, setError]           = useState(null)
