@@ -1,7 +1,9 @@
-name: Deploy to GitHub Pages
+name: CI + Deploy to GitHub Pages
 
 on:
   push:
+    branches: [main]
+  pull_request:
     branches: [main]
   workflow_dispatch:
 
@@ -14,9 +16,11 @@ concurrency:
   group: pages
   cancel-in-progress: false
 
+# ─────────────────────────────────────────────────────────────────────────────
 jobs:
-  build:
-    name: Build
+
+  quality-gates:
+    name: Quality Gates
     runs-on: ubuntu-latest
 
     steps:
@@ -32,8 +36,70 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run tests
-        run: npm test
+      # ── Playwright browser cache ──────────────────────────────────────────
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        id: playwright-cache
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-chromium-${{ hashFiles('package-lock.json') }}
+
+      - name: Install Playwright + system deps (first time)
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: npx playwright install --with-deps chromium
+
+      - name: Install Playwright system deps (cache hit)
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: npx playwright install-deps chromium
+
+      # ── Gate 1: Unit tests + coverage ────────────────────────────────────
+      - name: Unit tests + coverage
+        run: npm run test:coverage
+
+      # ── Gate 2: E2E behavioural tests ────────────────────────────────────
+      - name: E2E tests
+        run: npm run test:e2e
+
+      # ── Gate 3: Accessibility (WCAG 2.1 AA) ──────────────────────────────
+      - name: Accessibility tests
+        run: npm run test:a11y
+
+      # ── Gate 4: Vulnerability scan ────────────────────────────────────────
+      - name: Vulnerability scan
+        run: npm audit --audit-level=high
+
+      # ── Artefacts ─────────────────────────────────────────────────────────
+      - name: Upload test artefacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-${{ github.run_id }}
+          path: |
+            coverage/
+            test-results/
+            playwright-report/
+            playwright-report-a11y/
+          retention-days: 7
+
+  # ───────────────────────────────────────────────────────────────────────────
+  build:
+    name: Build
+    needs: quality-gates
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
 
       - name: Build
         run: npm run build
@@ -48,10 +114,12 @@ jobs:
         with:
           path: dist/
 
+  # ───────────────────────────────────────────────────────────────────────────
   deploy:
     name: Deploy
     needs: build
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
