@@ -42,7 +42,7 @@ This document describes how the `ai-sdlc-dashboard` application is tested, how e
 
 | Layer | Tool | Count | When |
 |-------|------|-------|------|
-| Unit / component | Vitest + @testing-library/react | 99 tests, 11 files | `npm test` — on every push |
+| Unit / component | Vitest + @testing-library/react | 101 tests, 11 files | `npm test` — on every push |
 | E2E behavioural | Playwright (Chromium) | 35 tests | `npm run test:e2e` — on every push |
 | Accessibility | Playwright + @axe-core/playwright | 5 tests | `npm run test:a11y` — on every push |
 | Vulnerability | npm audit | 0 high-severity | `npm audit --audit-level=high` |
@@ -75,7 +75,7 @@ This document describes how the `ai-sdlc-dashboard` application is tested, how e
 |------|-------|
 | Dashboard dev server | `npm run dev` → `http://localhost:5174` |
 | Playwright base URL | `http://localhost:5174` |
-| Metrics file (E2E) | `public/metrics/roi-calculator.json` (copy of live metrics for local E2E) |
+| Metrics file (E2E) | `public/metrics/roi-calculator/AIKPI.json` (copy of live metrics for local E2E) |
 | Node version | 20 LTS |
 | Browser (E2E) | Chromium (Playwright-managed) |
 
@@ -86,7 +86,7 @@ This document describes how the `ai-sdlc-dashboard` application is tested, how e
 | Trigger | Push to `main`, pull request |
 | Node version | 20 LTS |
 | Dev server start | Playwright `webServer` config auto-starts `npm run dev` |
-| Metrics file | Committed `public/metrics/roi-calculator.json` |
+| Metrics file | Committed `public/metrics/roi-calculator/AIKPI.json` |
 
 ### Key environment notes
 
@@ -102,10 +102,10 @@ _Last recorded run — 2026-04-04_
 
 | Suite | Files | Tests | Passed | Failed |
 |-------|-------|-------|--------|--------|
-| Unit (Vitest) | 11 | 99 | 99 | 0 |
+| Unit (Vitest) | 11 | 101 | 101 | 0 |
 | E2E behavioural (Playwright) | 1 | 35 | 35 | 0 |
 | Accessibility (axe-core) | 1 | 5 | 5 | 0 |
-| **Total** | **13** | **139** | **139** | **0** |
+| **Total** | **13** | **141** | **141** | **0** |
 
 Coverage (last run):
 
@@ -133,7 +133,7 @@ Coverage (last run):
 | FR-03.1 | Tier 1 cards | `TierPanels.test.jsx` — Tier1Panel tests; `app.spec.js` — "Tier 1 shows AI Acceptance Rate card", "Tier 1 shows Boilerplate Reduction card" |
 | FR-03.2 | Tier 2 cards | `TierPanels.test.jsx` — Tier2Panel tests (flow_efficiency as %); `app.spec.js` — "Tier 2 shows PR Cycle Time card" |
 | FR-03.3 | Tier 3 cards | `TierPanels.test.jsx` — Tier3Panel tests; `app.spec.js` — "Tier 3 shows AI Change Failure Rate card" |
-| FR-03.4 | Tier 4 cards | `TierPanels.test.jsx` — Tier4Panel tests (labor_arbitrage toLocaleString); `app.spec.js` — "Tier 4 shows Token ROI card" |
+| FR-03.4 | Tier 4 cards | `TierPanels.test.jsx` — Tier4Panel tests (labor_arbitrage toLocaleString, legacy_modernization_roi as %, card label); `app.spec.js` — "Tier 4 shows Token ROI card" |
 | FR-03.5 | MOCK badge on TierCard | `TierCard.test.jsx` — "renders MOCK badge when isMock is true" |
 | FR-03.6 | Trend arrow | `TierCard.test.jsx` — "renders up trend arrow", "renders down trend arrow" |
 | FR-04.1–4.3 | SPACE panel dimensions | `SpacePanel.test.jsx` — all 5 dimension labels, activity count; `app.spec.js` — "SPACE panel shows Satisfaction/Activity dimension" |
@@ -153,7 +153,7 @@ Coverage (last run):
 | NFR-01 Functions ≥ 80 % | 80 % | Vitest coverage-v8 | `npm run test:coverage` |
 | NFR-01 Branches ≥ 75 % | 75 % | Vitest coverage-v8 | `npm run test:coverage` |
 | NFR-01 Lines ≥ 80 % | 80 % | Vitest coverage-v8 | `npm run test:coverage` |
-| NFR-02 Unit tests pass | 99/99 | Vitest | `npm test` |
+| NFR-02 Unit tests pass | 101/101 | Vitest | `npm test` |
 | NFR-03 E2E tests pass | 35/35 | Playwright | `npm run test:e2e` |
 | NFR-04 A11y tests pass | 5/5 | Playwright + axe | `npm run test:a11y` |
 | NFR-05 Vulnerability scan | 0 high | npm audit | `npm audit --audit-level=high` |
@@ -199,16 +199,15 @@ Coverage (last run):
 
 ## 9. CI Gates Reference
 
-The dashboard's own CI (GitHub Actions deploy workflow) runs the following gates on every push to `main`:
+The dashboard's own CI (`.github/workflows/ci.yml`) runs the following gates on every push to `main`:
 
 | # | Gate | Command | Pass condition |
 |---|------|---------|----------------|
 | 1 | Build | `npm run build` | Exit 0, dist artefact produced |
-| 2 | Unit tests | `npm test` | 99/99 tests pass |
-| 3 | Coverage | `npm run test:coverage` | All 4 thresholds met |
-| 4 | E2E tests | `npm run test:e2e` | 35/35 tests pass |
-| 5 | Accessibility | `npm run test:a11y` | 5/5 axe scans pass (0 violations) |
-| 6 | Vulnerability scan | `npm audit --audit-level=high` | 0 high-severity advisories |
-| 7 | Deploy to Pages | `actions/deploy-pages@v4` | Deployment URL live |
+| 2 | Unit Tests + Coverage | `npm run test:coverage` | 101/101 tests pass · stmts ≥ 80% · fns ≥ 80% · branches ≥ 75% · lines ≥ 80% |
+| 3 | E2E Tests (Playwright) | `npm run test:e2e` | 35/35 tests pass |
+| 4 | Accessibility — WCAG 2.1 AA | `npm run test:a11y` | 5/5 axe scans pass (0 violations) |
+| 5 | Vulnerability Check | `npm audit --audit-level=high` | 0 high-severity advisories |
+| 6 | Deploy to Pages | `actions/deploy-pages@v4` | Deployment URL live (main branch only) |
 
-Results from gates 1–6 are written to `test-results/` as JSON artefacts and consumed by the dashboard's own `ci_native` metrics field in future sprints.
+Gates 1–5 run in the `quality-gates` job with `continue-on-error: true`. A Go/No-Go report is written to `GITHUB_STEP_SUMMARY`. The `Enforce Gates` step fails the job if any gate failed. Deploy only runs if quality-gates passes.

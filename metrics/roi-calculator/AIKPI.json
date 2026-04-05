@@ -4,7 +4,7 @@
     "repo": "GiriCodeMe/roi-calculator",
     "collected_at": "2026-04-05T01:08:23.149Z",
     "ci_run_id": "23991303875",
-    "schema_version": "1.0.0"
+    "schema_version": "1.1.0"
   },
   "tier1_input": {
     "ai_acceptance_rate": {
@@ -18,6 +18,14 @@
       "unit": "percent",
       "source": "copilot-api",
       "is_mock": true
+    },
+    "ai_commit_ratio": {
+      "value": 85,
+      "unit": "percent",
+      "source": "git-log-co-authored-by",
+      "is_mock": false,
+      "ai_commits": 34,
+      "total_commits": 40
     }
   },
   "tier2_process": {

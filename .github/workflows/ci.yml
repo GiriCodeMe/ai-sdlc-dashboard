@@ -277,7 +277,7 @@ jobs:
           VITE_BASE_PATH: /ai-sdlc-dashboard/
 
       - name: Copy metrics into dist
-        run: mkdir -p dist/metrics && cp metrics/*.json dist/metrics/ 2>/dev/null || true
+        run: mkdir -p dist/metrics && cp -r metrics/. dist/metrics/ 2>/dev/null || true
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3

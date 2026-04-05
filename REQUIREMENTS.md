@@ -1,6 +1,6 @@
 # AI-SDLC Performance Dashboard — Requirements
 
-_Version 1.0 · 2026-04-04_
+_Version 1.1 · 2026-04-04_
 
 ## Table of Contents
 
@@ -70,7 +70,7 @@ The AI-SDLC Performance Dashboard is a GitHub Pages single-page application that
 | US-04 | As an Engineering Manager I want to see Tier 1 AI Input metrics (acceptance rate, boilerplate reduction) so I know how deeply the team uses AI assistance. |
 | US-05 | As a Tech Lead I want Tier 2 Process metrics (PR cycle time, flow efficiency) to spot delivery bottlenecks. |
 | US-06 | As a Tech Lead I want Tier 3 Output Quality metrics (AI change failure rate, security remediation speed) to assess risk. |
-| US-07 | As an Engineering Manager I want Tier 4 Business Value metrics (Token ROI, unit cost per feature, labor arbitrage) to build the AI tooling business case. |
+| US-07 | As an Engineering Manager I want Tier 4 Business Value metrics (Token ROI, unit cost per feature, labor arbitrage, legacy modernization ROI) to build the AI tooling business case. |
 
 ### SPACE framework
 
@@ -156,7 +156,7 @@ The AI-SDLC Performance Dashboard is a GitHub Pages single-page application that
 | FR-03.1 | **Tier 1** shall render `ai_acceptance_rate` (%) and `boilerplate_reduction` (%) as TierCards. |
 | FR-03.2 | **Tier 2** shall render `pr_cycle_time` (hours) and `flow_efficiency` (as %). |
 | FR-03.3 | **Tier 3** shall render `ai_change_failure_rate` (%) and `security_remediation_speed` (days). |
-| FR-03.4 | **Tier 4** shall render `unit_cost_per_feature` ($), `token_roi` (x), and `labor_arbitrage_value` ($). |
+| FR-03.4 | **Tier 4** shall render `unit_cost_per_feature` ($), `token_roi` (x), `labor_arbitrage_value` ($), and `legacy_modernization_roi` (ratio displayed as %). Formula: AI refactor cost ÷ estimated manual rewrite cost. Tools: Cast Highlight, SonarQube. |
 | FR-03.5 | Each TierCard with `is_mock: true` shall show an orange "MOCK" badge. |
 | FR-03.6 | Each TierCard shall show an up/down trend arrow when a `trend` prop is provided. |
 
@@ -264,7 +264,7 @@ The AI-SDLC Performance Dashboard is a GitHub Pages single-page application that
 
 ### NFR-02 — Unit tests
 
-All 99 unit tests in the `src/test/` suite must pass on every build.
+All 101 unit tests in the `src/test/` suite must pass on every build.
 
 ### NFR-03 — E2E tests
 

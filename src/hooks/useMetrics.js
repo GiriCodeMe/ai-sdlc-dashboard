@@ -12,7 +12,7 @@ export function useMetrics(selectedProject = 'roi-calculator') {
 
     Promise.all(
       KNOWN_PROJECTS.map(async (project) => {
-        const url = `${base}metrics/${project}.json`
+        const url = `${base}metrics/${project}/AIKPI.json`
         const res = await fetch(url)
         if (!res.ok) throw new Error(`Failed to load ${url}: ${res.status}`)
         const json = await res.json()

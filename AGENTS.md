@@ -4,7 +4,7 @@
 
 1. **Metrics pipeline** — `useMetrics.js` fetches `{BASE_URL}metrics/{project}.json` for every project in `KNOWN_PROJECTS` on mount. Returns `{ metrics, allMetrics, projects, loading, error }`. Metrics are pushed to the `metrics/` directory by each source repo's CI via `SDLC_DASHBOARD_PAT`.
 
-2. **4-Tier KPI matrix** — Four panels rendered in order: Tier 1 (AI Input), Tier 2 (Process), Tier 3 (Output Quality), Tier 4 (Business Value). Each panel uses `<TierCard>` cards. Sections marked with `<SectionHeader hasMockData={true}>` until all fields are live.
+2. **4-Tier KPI matrix** — Four panels rendered in order: Tier 1 (AI Input), Tier 2 (Process), Tier 3 (Output Quality), Tier 4 (Business Value). Each panel uses `<TierCard>` cards. Tier4Panel renders 4 KPIs: Unit Cost/Feature, Token ROI, Labor Arbitrage Value, and Legacy Modernization ROI. Sections marked with `<SectionHeader hasMockData={true}>` until all fields are live.
 
 3. **TierCard** — Generic metric card with `label`, `value`, `unit`, `isMock`, `colorClass`, and optional `trend` (`'up'` / `'down'`). Shows an orange `MOCK` pill when `isMock={true}`.
 
@@ -64,7 +64,7 @@ src/
       Tier1Panel.jsx            # tier1_input: ai_acceptance_rate, boilerplate_reduction
       Tier2Panel.jsx            # tier2_process: pr_cycle_time, flow_efficiency
       Tier3Panel.jsx            # tier3_output: ai_change_failure_rate, security_remediation_speed
-      Tier4Panel.jsx            # tier4_value: unit_cost_per_feature, token_roi, labour_arbitrage_value
+      Tier4Panel.jsx            # tier4_value: unit_cost_per_feature, token_roi, labor_arbitrage_value, legacy_modernization_roi (optional)
     space/
       SpacePanel.jsx            # SPACE 5-dimension grid with CSS progress bars
     charts/
@@ -80,7 +80,8 @@ src/
     formatters.test.js          # 6 tests — all formatter functions
     heatmapLayout.test.js       # 5 tests — empty/null, sprints, projects, score, null cells
 metrics/
-  .gitkeep                      # CI pushes {project}.json here; committed to repo
+  {project}/
+    AIKPI.json                  # Standard file name; CI pushes metrics/{project}/AIKPI.json
 .github/workflows/
   deploy.yml                    # npm test → build (VITE_BASE_PATH) → copy metrics → Pages deploy
 ```
@@ -91,10 +92,10 @@ metrics/
 
 | # | Check | Command | Pass Condition |
 |---|-------|---------|----------------|
-| 1 | **Unit tests + coverage** | `npm run test:coverage` | All tests pass + ≥95% on all metrics |
-| 2 | **E2E tests** | `npm run build && npm run test:e2e` | All 63 Playwright behavioural tests pass |
+| 1 | **Unit tests + coverage** | `npm run test:coverage` | 101/101 tests pass · stmts/fns/lines ≥ 80% · branches ≥ 75% |
+| 2 | **E2E tests** | `npm run test:e2e` | All 35 Playwright behavioural tests pass |
 | 3 | **Accessibility** | `npm run test:a11y` | 0 axe-core WCAG 2.1 AA violations |
-| 4 | **Vulnerability scan** | `npm audit` | `found 0 vulnerabilities` |
+| 4 | **Vulnerability scan** | `npm audit --audit-level=high` | 0 high-severity advisories |
 | 5 | **Library audit** | `npm audit` | No high or critical severity advisories |
 
 ### Rules
@@ -103,13 +104,13 @@ metrics/
 - When adding a new util or component, write at least one unit test for it in the same build step.
 - When adding new UI behaviour (new page element, interaction, or validation), add an E2E test in `e2e/app.spec.js`.
 - When adding new visible elements, verify WCAG 2.1 AA colour contrast (≥4.5:1 for normal text) before committing.
-- E2E tests require a production build (`npm run build`) before running — `npm run test:e2e` starts `npm run preview` automatically via `playwright.config.js`.
+- E2E tests use the dev server (`npm run dev` on port 5174) — `npm run test:e2e` auto-starts it via the `webServer` block in `playwright.config.js`.
 - Never use `npm audit --force` or `npm audit fix --force` without confirming with the user.
 - Report all five check results to the user at the end of every build in this format:
 
 ```
-✅ Unit tests + coverage — 90/90 passed, 100% stmts / 96.87% branches
-✅ E2E tests             — 47/47 passed
+✅ Unit tests + coverage — 101/101 passed, 92% stmts / 78% branches
+✅ E2E tests             — 35/35 passed
 ✅ Accessibility         — 0 WCAG 2.1 AA violations
 ✅ npm audit             — 0 vulnerabilities
 ✅ Lib audit             — 0 high/critical advisories
@@ -117,24 +118,17 @@ metrics/
 
 ## CI Gates (`.github/workflows/ci.yml`)
 
-12 gates run automatically on every push/PR to `main`:
+5 gates run automatically on every push/PR to `main` (see CI / Deployment section for full detail):
 
 | Gate | Check | Threshold |
 |------|-------|-----------|
 | 1 | Build | Compiles without errors |
-| 2 | Package (npm pack) | `.tgz` artifact produced |
-| 3 | **Lighthouse** | Performance ≥ 80, Accessibility ≥ 90, Best Practices ≥ 80 |
-| 4 | **E2E Tests (Playwright)** | All 63 behavioural tests pass |
-| 5 | **E2E Coverage** | > 79% statements / functions / branches / lines |
-| 6 | **Accessibility — WCAG 2.1 AA** | 0 axe-core violations |
-| 7 | Unit Tests & Coverage | 0 failures + ≥ 95% on all metrics |
-| 8 | Code Lint (ESLint) | 0 errors |
-| 9 | Library Audit | All advisories reported |
-| 10 | Vulnerability Check | No moderate / high / critical vulnerabilities |
-| 11 | SonarQube Scan | Disabled — enable by adding `SONAR_TOKEN` secret |
-| 12 | SonarQube Quality Gate | Disabled — enable by adding `SONAR_TOKEN` secret |
+| 2 | Unit Tests & Coverage | 101/101 pass · stmts/fns/lines ≥ 80% · branches ≥ 75% |
+| 3 | E2E Tests (Playwright) | All 35 behavioural tests pass |
+| 4 | Accessibility — WCAG 2.1 AA | 0 axe-core violations (light + dark mode) |
+| 5 | Vulnerability Check | 0 high-severity advisories |
 
-A Go/No-Go report is written to the GitHub Actions Job Summary after every run, with collapsible sections for Unit, E2E, Accessibility, and Lighthouse results. If any gate fails, the job exits non-zero (**No-Go**).
+A Go/No-Go report is written to the GitHub Actions Job Summary after every run, with collapsible sections for Unit, E2E, and Accessibility results. If any gate fails, the job exits non-zero (**No-Go**).
 
 ## Metrics JSON Schema
 
@@ -149,8 +143,9 @@ meta
   schema_version   { value: "1.0", ... }
 
 tier1_input
-  ai_acceptance_rate       { value: <number>, unit: "%", ... }
-  boilerplate_reduction    { value: <number>, unit: "%", ... }
+  ai_acceptance_rate       { value: <number>, unit: "%", ... }        ← mock; needs Copilot API
+  boilerplate_reduction    { value: <number>, unit: "%", ... }        ← mock; needs Copilot API
+  ai_commit_ratio          { value: <number>, unit: "%", is_mock: false, ai_commits, total_commits }  ← live; derived from git log Co-Authored-By
 
 tier2_process
   pr_cycle_time            { value: <number>, unit: "hours", ... }
@@ -163,7 +158,8 @@ tier3_output
 tier4_value
   unit_cost_per_feature    { value: <number>, unit: "USD", ... }
   token_roi                { value: <number>, unit: "x", ... }
-  labour_arbitrage_value   { value: <number>, unit: "USD/mo", ... }
+  labor_arbitrage_value    { value: <number>, unit: "USD/mo", ... }
+  legacy_modernization_roi { value: <number>, unit: "ratio", ... }  ← displayed as %; formula: AI refactor cost ÷ manual rewrite cost
 
 space_framework
   satisfaction    { value: <0–5>, unit: "score", ... }
@@ -234,22 +230,20 @@ flagged                = high_ai_usage && (high_failure_rate || low_orchestratio
 
 ### Light Theme (`:root`)
 
-| Token | Value | Usage |
-|-------|-------|-------|
-| `--bg` | `#f1f5f9` | Page background |
-| `--bg-card` | `#ffffff` | Card / modal background |
-| `--bg-alt` | `#f8fafc` | Result tiles, table stripe |
-| `--text` | `#1e293b` | Primary text |
-| `--text-muted` | `#475569` | Labels, secondary text (6.98:1 on `--bg`) |
-| `--positive` | `#15803d` | Positive ROI / profit (4.74:1 on `--bg-alt`) |
-| `--negative` | `#dc2626` | Negative ROI / errors |
-| `--break-even-bg` | `#dcfce7` | Break-even row background |
-| `--break-even-text` | `#15803d` | Break-even row text |
-| Scenario A accent | `#2563eb` | Border, focus ring, toggle button, chart line |
-| Scenario B accent | `#ea580c` | Border, focus ring, chart line |
-| Scenario B button | `#c2410c` | Toggle button text (5.17:1 on white) |
+| Token | Value | Usage | Contrast |
+|-------|-------|-------|---------|
+| `--bg` | `#f1f5f9` | Page background | — |
+| `--bg-card` | `#ffffff` | Card / modal background | — |
+| `--bg-alt` | `#f8fafc` | Table stripe, tile background | — |
+| `--text` | `#1e293b` | Primary text | 15.4:1 on `--bg` |
+| `--text-muted` | `#475569` | Labels, secondary text | 6.98:1 on `--bg` |
+| `--positive` | `#166534` | Positive indicators, ok banners | 6.82:1 on `--bg-alt` ✅ |
+| `--negative` | `#b91c1c` | Negative indicators, error banners | 5.93:1 on `#fef2f2` ✅ |
+| `--mock-badge` | `#c2410c` | MOCK pill text | 5.17:1 on white ✅ |
+| `--accent-a` | `#2563eb` | Tier 1/2 card accent border | — |
+| `--accent-b` | `#7c3aed` | Tier 3/4 card accent border | — |
 
-### Dark Theme (`[data-theme="dark"]`)
+### Dark Theme (`.dark`)
 
 | Token | Value | Contrast |
 |-------|-------|---------|
@@ -258,25 +252,39 @@ flagged                = high_ai_usage && (high_failure_rate || low_orchestratio
 | `--bg-alt` | `#162032` | — |
 | `--text` | `#f1f5f9` | 16.5:1 on `--bg` |
 | `--text-muted` | `#94a3b8` | 5.14:1 on `--bg-card` |
-| `--positive` | `#4ade80` | 7.8:1 on `--bg-card` |
-| `--negative` | `#f87171` | 7.2:1 on `--bg-card` |
-| `--break-even-bg` | `#14532d` | — |
-| `--break-even-text` | `#4ade80` | 7.8:1 on `--break-even-bg` |
+| `--positive` | `#4ade80` | 7.8:1 on `--bg-card` ✅ |
+| `--negative` | `#f87171` | 7.2:1 on `--bg-card` ✅ |
+| `--accent-a` | `#60a5fa` | 5.76:1 on `--bg-card` ✅ |
+| `--accent-b` | `#a78bfa` | 5.4:1 on `--bg-card` ✅ |
+
+**Important:** The `.dark` rule must set `color: var(--text); background: var(--bg)` directly — without this, `<td>` elements inherit the computed light-mode colour from `body`, causing ~1.2:1 contrast failure.
 
 ## CI / Deployment
 
-`.github/workflows/deploy.yml` — triggers on push to `main` and `workflow_dispatch`:
+`.github/workflows/ci.yml` — triggers on push to `main`, pull requests, and `workflow_dispatch`.
 
-1. `npm ci` — install deps
-2. `npm test` — unit tests must pass
-3. `npm run build` with `VITE_BASE_PATH=/ai-sdlc-dashboard/`
-4. `cp metrics/*.json dist/metrics/` — embed latest metrics in Pages artifact
-5. `actions/upload-pages-artifact@v3` + `actions/deploy-pages@v4`
+**`quality-gates` job** (runs on every push/PR — gates use `continue-on-error: true`, `Enforce Gates` step fails the job if any gate fails):
+
+| # | Gate | Command | Pass condition |
+|---|------|---------|----------------|
+| 1 | Build | `npm run build` | Exit 0 |
+| 2 | Unit Tests + Coverage | `npm run test:coverage` | 101/101 pass · stmts/fns/lines ≥ 80% · branches ≥ 75% |
+| 3 | E2E Tests (Playwright) | `npm run test:e2e` | 35/35 pass |
+| 4 | Accessibility — WCAG 2.1 AA | `npm run test:a11y` | 0 axe violations |
+| 5 | Vulnerability Check | `npm audit --audit-level=high` | 0 high-severity advisories |
+
+A Go/No-Go report is written to `GITHUB_STEP_SUMMARY` with collapsible sections for each test suite.
+
+**`build` + `deploy` jobs** — run only on `main`, gated behind `quality-gates`:
+
+1. `npm ci` + `npm run build` with `VITE_BASE_PATH=/ai-sdlc-dashboard/`
+2. `cp metrics/*.json dist/metrics/` — embed latest metrics in Pages artifact
+3. `actions/upload-pages-artifact@v3` + `actions/deploy-pages@v4`
 
 **Secret required on source repos:** `SDLC_DASHBOARD_PAT` — GitHub PAT with `repo` scope on `GiriCodeMe/ai-sdlc-dashboard`, used by the `publish-metrics` CI job to push `metrics/{project}.json`.
 
 ## Adding a New Source Project
 
 1. In `src/hooks/useMetrics.js`, add the project key to `KNOWN_PROJECTS`.
-2. In the source repo, add a `publish-metrics` CI job (mirror of `roi-calculator`'s job) that runs `scripts/collect-metrics.js` and pushes `metrics/{project}.json` to this repo.
+2. In the source repo, add a `publish-metrics` CI job (mirror of `roi-calculator`'s job) that runs `scripts/collect-metrics.js` and pushes `metrics/{project}/AIKPI.json` to this repo.
 3. No component changes needed — all panels read from the selected project's metrics object.
