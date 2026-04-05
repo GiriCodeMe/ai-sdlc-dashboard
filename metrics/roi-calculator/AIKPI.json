@@ -2,8 +2,8 @@
   "meta": {
     "project": "roi-calculator",
     "repo": "GiriCodeMe/roi-calculator",
-    "collected_at": "2026-04-05T01:08:23.149Z",
-    "ci_run_id": "23991303875",
+    "collected_at": "2026-04-05T03:02:06.224Z",
+    "ci_run_id": "23992969812",
     "schema_version": "1.1.0"
   },
   "tier1_input": {
@@ -20,12 +20,12 @@
       "is_mock": true
     },
     "ai_commit_ratio": {
-      "value": 85,
+      "value": 100,
       "unit": "percent",
       "source": "git-log-co-authored-by",
       "is_mock": false,
-      "ai_commits": 34,
-      "total_commits": 40
+      "ai_commits": 1,
+      "total_commits": 1
     }
   },
   "tier2_process": {
@@ -97,7 +97,7 @@
     },
     "activity": {
       "commits_last_30d": {
-        "value": 38,
+        "value": 39,
         "unit": "count",
         "source": "github-api-commits",
         "is_mock": false
@@ -230,7 +230,7 @@
         "is_mock": false
       },
       "coverage_lines": {
-        "value": 96.84,
+        "value": 98.94,
         "unit": "percent",
         "source": "coverage-e2e/coverage-summary.json",
         "is_mock": false
@@ -242,13 +242,13 @@
         "is_mock": false
       },
       "coverage_functions": {
-        "value": 88.57,
+        "value": 91.42,
         "unit": "percent",
         "source": "coverage-e2e/coverage-summary.json",
         "is_mock": false
       },
       "coverage_statements": {
-        "value": 94.69,
+        "value": 96.46,
         "unit": "percent",
         "source": "coverage-e2e/coverage-summary.json",
         "is_mock": false
@@ -290,8 +290,26 @@
       "total": {
         "value": 0,
         "unit": "count",
-        "source": "npm audit unavailable",
-        "is_mock": true
+        "source": "npm audit --json",
+        "is_mock": false
+      },
+      "moderate": {
+        "value": 0,
+        "unit": "count",
+        "source": "npm audit --json",
+        "is_mock": false
+      },
+      "high": {
+        "value": 0,
+        "unit": "count",
+        "source": "npm audit --json",
+        "is_mock": false
+      },
+      "critical": {
+        "value": 0,
+        "unit": "count",
+        "source": "npm audit --json",
+        "is_mock": false
       },
       "gate": "pass"
     },
