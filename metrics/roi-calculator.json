@@ -1,0 +1,300 @@
+{
+  "meta": {
+    "project": "roi-calculator",
+    "repo": "GiriCodeMe/roi-calculator",
+    "collected_at": "2026-04-05T00:06:36.089Z",
+    "ci_run_id": "23990249018",
+    "schema_version": "1.0.0"
+  },
+  "tier1_input": {
+    "ai_acceptance_rate": {
+      "value": 72,
+      "unit": "percent",
+      "source": "copilot-api",
+      "is_mock": true
+    },
+    "boilerplate_reduction": {
+      "value": 38,
+      "unit": "percent",
+      "source": "copilot-api",
+      "is_mock": true
+    }
+  },
+  "tier2_process": {
+    "pr_cycle_time": {
+      "value": 0,
+      "unit": "hours",
+      "source": "github-api-pulls",
+      "is_mock": false
+    },
+    "flow_efficiency": {
+      "value": 0.61,
+      "unit": "ratio",
+      "source": "linearb-api",
+      "is_mock": true
+    }
+  },
+  "tier3_output": {
+    "ai_change_failure_rate": {
+      "value": 2.1,
+      "unit": "percent",
+      "source": "dora-api",
+      "is_mock": true
+    },
+    "security_remediation_speed": {
+      "value": 4.2,
+      "unit": "hours",
+      "source": "snyk-api",
+      "is_mock": true
+    }
+  },
+  "tier4_value": {
+    "unit_cost_per_feature": {
+      "value": 12.5,
+      "unit": "USD",
+      "source": "manual-estimate",
+      "is_mock": true
+    },
+    "token_roi": {
+      "value": 8.3,
+      "unit": "ratio",
+      "source": "manual-estimate",
+      "is_mock": true
+    },
+    "labor_arbitrage_value": {
+      "value": 1200,
+      "unit": "USD/month",
+      "source": "manual-estimate",
+      "is_mock": true
+    }
+  },
+  "space_framework": {
+    "satisfaction": {
+      "value": 4.1,
+      "unit": "score-5",
+      "source": "survey",
+      "is_mock": true
+    },
+    "performance": {
+      "value": 78,
+      "unit": "percent",
+      "source": "dora",
+      "is_mock": true
+    },
+    "activity": {
+      "commits_last_30d": {
+        "value": 33,
+        "unit": "count",
+        "source": "github-api-commits",
+        "is_mock": false
+      },
+      "prs_last_30d": {
+        "value": 6,
+        "unit": "count",
+        "source": "github-api-pulls",
+        "is_mock": false
+      }
+    },
+    "communication": {
+      "value": 3.8,
+      "unit": "score-5",
+      "source": "survey",
+      "is_mock": true
+    },
+    "efficiency": {
+      "value": 0.71,
+      "unit": "ratio",
+      "source": "manual-estimate",
+      "is_mock": true
+    }
+  },
+  "orchestration_value": {
+    "complex_modules_managed": {
+      "value": 1,
+      "unit": "count",
+      "source": "fs.readdirSync(src/components)",
+      "is_mock": false
+    },
+    "manual_lines_written": {
+      "value": 337,
+      "unit": "count",
+      "source": "fs.readdirSync(src/components)",
+      "is_mock": false
+    },
+    "ratio": {
+      "value": 0.002967359050445104,
+      "unit": "ratio",
+      "source": "derived",
+      "is_mock": false
+    }
+  },
+  "retention_risk": {
+    "flagged": true,
+    "evaluation": {
+      "high_ai_usage": {
+        "value": true,
+        "threshold": ">=70% acceptance"
+      },
+      "high_failure_rate": {
+        "value": false,
+        "threshold": ">=5% failure rate"
+      },
+      "low_orchestration_value": {
+        "value": true,
+        "threshold": "<0.005 ratio"
+      }
+    }
+  },
+  "ci_native": {
+    "build_status": {
+      "value": "pass",
+      "unit": "status",
+      "source": "github-actions",
+      "is_mock": false
+    },
+    "unit_tests": {
+      "total": {
+        "value": 0,
+        "unit": "count",
+        "source": "vitest-results.json missing",
+        "is_mock": true
+      },
+      "passed": {
+        "value": 0,
+        "unit": "count",
+        "source": "vitest-results.json missing",
+        "is_mock": true
+      },
+      "failed": {
+        "value": 0,
+        "unit": "count",
+        "source": "vitest-results.json missing",
+        "is_mock": true
+      },
+      "coverage_lines": {
+        "value": 0,
+        "unit": "percent",
+        "source": "coverage-summary.json missing",
+        "is_mock": true
+      },
+      "coverage_branches": {
+        "value": 0,
+        "unit": "percent",
+        "source": "coverage-summary.json missing",
+        "is_mock": true
+      },
+      "coverage_functions": {
+        "value": 0,
+        "unit": "percent",
+        "source": "coverage-summary.json missing",
+        "is_mock": true
+      },
+      "coverage_statements": {
+        "value": 0,
+        "unit": "percent",
+        "source": "coverage-summary.json missing",
+        "is_mock": true
+      }
+    },
+    "e2e_tests": {
+      "total": {
+        "value": 0,
+        "unit": "count",
+        "source": "playwright-results.json missing",
+        "is_mock": true
+      },
+      "passed": {
+        "value": 0,
+        "unit": "count",
+        "source": "playwright-results.json missing",
+        "is_mock": true
+      },
+      "failed": {
+        "value": 0,
+        "unit": "count",
+        "source": "playwright-results.json missing",
+        "is_mock": true
+      },
+      "coverage_lines": {
+        "value": 0,
+        "unit": "percent",
+        "source": "coverage-e2e missing",
+        "is_mock": true
+      },
+      "coverage_branches": {
+        "value": 0,
+        "unit": "percent",
+        "source": "coverage-e2e missing",
+        "is_mock": true
+      },
+      "coverage_functions": {
+        "value": 0,
+        "unit": "percent",
+        "source": "coverage-e2e missing",
+        "is_mock": true
+      },
+      "coverage_statements": {
+        "value": 0,
+        "unit": "percent",
+        "source": "coverage-e2e missing",
+        "is_mock": true
+      }
+    },
+    "a11y_tests": {
+      "value": 0,
+      "unit": "violations",
+      "source": "axe-core",
+      "is_mock": true
+    },
+    "lint_errors": {
+      "value": 0,
+      "unit": "count",
+      "source": "eslint",
+      "is_mock": false
+    },
+    "vuln_check": {
+      "total": {
+        "value": 0,
+        "unit": "count",
+        "source": "npm audit unavailable",
+        "is_mock": true
+      },
+      "gate": "pass"
+    },
+    "lighthouse": {
+      "performance": {
+        "value": 0,
+        "unit": "score",
+        "source": "lighthouse-artifact missing",
+        "is_mock": true
+      },
+      "accessibility": {
+        "value": 0,
+        "unit": "score",
+        "source": "lighthouse-artifact missing",
+        "is_mock": true
+      },
+      "best_practices": {
+        "value": 0,
+        "unit": "score",
+        "source": "lighthouse-artifact missing",
+        "is_mock": true
+      }
+    }
+  },
+  "heatmap_series": [
+    {
+      "project": "roi-calculator",
+      "sprint": "2026-W14",
+      "ai_acceptance_rate": 72,
+      "technical_debt_ratio": 0.08
+    }
+  ],
+  "dual_axis_series": [
+    {
+      "sprint": "2026-W14",
+      "pr_cycle_time_hours": 0,
+      "ai_induced_vulnerabilities": 2.1
+    }
+  ]
+}
