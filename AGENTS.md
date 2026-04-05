@@ -85,31 +85,56 @@ metrics/
   deploy.yml                    # npm test → build (VITE_BASE_PATH) → copy metrics → Pages deploy
 ```
 
-## Non-Functional Mandates
+## Non-Functional Mandates — Run on Every Build
 
-**When implementing or modifying any feature, run the check below before considering the task done.**
+**When the instruction is "build" (or any feature implementation), always run all five checks below in order before considering the task done. A build is not complete until all five pass.**
 
 | # | Check | Command | Pass Condition |
 |---|-------|---------|----------------|
-| 1 | **Unit tests** | `npm test` | All tests pass (0 failures) |
-| 2 | **Unit coverage** | `npm run test:coverage` | ≥ 80% statements / functions / branches / lines |
-| 3 | **Build** | `npm run build` | Compiles without errors |
+| 1 | **Unit tests + coverage** | `npm run test:coverage` | All tests pass + ≥95% on all metrics |
+| 2 | **E2E tests** | `npm run build && npm run test:e2e` | All 63 Playwright behavioural tests pass |
+| 3 | **Accessibility** | `npm run test:a11y` | 0 axe-core WCAG 2.1 AA violations |
+| 4 | **Vulnerability scan** | `npm audit` | `found 0 vulnerabilities` |
+| 5 | **Library audit** | `npm audit` | No high or critical severity advisories |
 
 ### Rules
 
-- If any check fails, fix it before marking the task done.
-- When adding or modifying a pure util (`retentionRisk.js`, `formatters.js`, `heatmapLayout.js`), update its test file in the same change.
-- New utils that are pure and independently testable must have a corresponding `src/test/{util}.test.js`.
-- Components are not unit-tested individually — test behaviour through pure utils and integration via the browser.
-- Never use `npm audit --force` without confirming with the user.
-
-Report results at the end of every build:
+- If any check fails, **fix the issue before marking the build done** — do not skip or defer.
+- When adding a new util or component, write at least one unit test for it in the same build step.
+- When adding new UI behaviour (new page element, interaction, or validation), add an E2E test in `e2e/app.spec.js`.
+- When adding new visible elements, verify WCAG 2.1 AA colour contrast (≥4.5:1 for normal text) before committing.
+- E2E tests require a production build (`npm run build`) before running — `npm run test:e2e` starts `npm run preview` automatically via `playwright.config.js`.
+- Never use `npm audit --force` or `npm audit fix --force` without confirming with the user.
+- Report all five check results to the user at the end of every build in this format:
 
 ```
-✅ Unit tests   — 16/16 passed
-✅ Coverage     — 92% stmts / 88% branches
-✅ Build        — dist/ produced without errors
+✅ Unit tests + coverage — 90/90 passed, 100% stmts / 96.87% branches
+✅ E2E tests             — 47/47 passed
+✅ Accessibility         — 0 WCAG 2.1 AA violations
+✅ npm audit             — 0 vulnerabilities
+✅ Lib audit             — 0 high/critical advisories
 ```
+
+## CI Gates (`.github/workflows/ci.yml`)
+
+12 gates run automatically on every push/PR to `main`:
+
+| Gate | Check | Threshold |
+|------|-------|-----------|
+| 1 | Build | Compiles without errors |
+| 2 | Package (npm pack) | `.tgz` artifact produced |
+| 3 | **Lighthouse** | Performance ≥ 80, Accessibility ≥ 90, Best Practices ≥ 80 |
+| 4 | **E2E Tests (Playwright)** | All 63 behavioural tests pass |
+| 5 | **E2E Coverage** | > 79% statements / functions / branches / lines |
+| 6 | **Accessibility — WCAG 2.1 AA** | 0 axe-core violations |
+| 7 | Unit Tests & Coverage | 0 failures + ≥ 95% on all metrics |
+| 8 | Code Lint (ESLint) | 0 errors |
+| 9 | Library Audit | All advisories reported |
+| 10 | Vulnerability Check | No moderate / high / critical vulnerabilities |
+| 11 | SonarQube Scan | Disabled — enable by adding `SONAR_TOKEN` secret |
+| 12 | SonarQube Quality Gate | Disabled — enable by adding `SONAR_TOKEN` secret |
+
+A Go/No-Go report is written to the GitHub Actions Job Summary after every run, with collapsible sections for Unit, E2E, Accessibility, and Lighthouse results. If any gate fails, the job exits non-zero (**No-Go**).
 
 ## Metrics JSON Schema
 
@@ -212,24 +237,31 @@ flagged                = high_ai_usage && (high_failure_rate || low_orchestratio
 | Token | Value | Usage |
 |-------|-------|-------|
 | `--bg` | `#f1f5f9` | Page background |
-| `--bg-card` | `#ffffff` | Card background |
-| `--bg-alt` | `#f8fafc` | Alternating row background |
+| `--bg-card` | `#ffffff` | Card / modal background |
+| `--bg-alt` | `#f8fafc` | Result tiles, table stripe |
 | `--text` | `#1e293b` | Primary text |
-| `--text-muted` | `#475569` | Labels, secondary text |
-| `--positive` | `#15803d` | Positive trend, pass state |
-| `--negative` | `#dc2626` | Negative trend, fail state |
-| `--accent` | `#2563eb` | Borders, focus rings, links |
+| `--text-muted` | `#475569` | Labels, secondary text (6.98:1 on `--bg`) |
+| `--positive` | `#15803d` | Positive ROI / profit (4.74:1 on `--bg-alt`) |
+| `--negative` | `#dc2626` | Negative ROI / errors |
+| `--break-even-bg` | `#dcfce7` | Break-even row background |
+| `--break-even-text` | `#15803d` | Break-even row text |
+| Scenario A accent | `#2563eb` | Border, focus ring, toggle button, chart line |
+| Scenario B accent | `#ea580c` | Border, focus ring, chart line |
+| Scenario B button | `#c2410c` | Toggle button text (5.17:1 on white) |
 
-### Dark Theme (`.dark`)
+### Dark Theme (`[data-theme="dark"]`)
 
-| Token | Value |
-|-------|-------|
-| `--bg` | `#0f172a` |
-| `--bg-card` | `#1e293b` |
-| `--text` | `#f1f5f9` |
-| `--text-muted` | `#94a3b8` |
-| `--positive` | `#4ade80` |
-| `--negative` | `#f87171` |
+| Token | Value | Contrast |
+|-------|-------|---------|
+| `--bg` | `#0f172a` | — |
+| `--bg-card` | `#1e293b` | — |
+| `--bg-alt` | `#162032` | — |
+| `--text` | `#f1f5f9` | 16.5:1 on `--bg` |
+| `--text-muted` | `#94a3b8` | 5.14:1 on `--bg-card` |
+| `--positive` | `#4ade80` | 7.8:1 on `--bg-card` |
+| `--negative` | `#f87171` | 7.2:1 on `--bg-card` |
+| `--break-even-bg` | `#14532d` | — |
+| `--break-even-text` | `#4ade80` | 7.8:1 on `--break-even-bg` |
 
 ## CI / Deployment
 
