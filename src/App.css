@@ -5,11 +5,11 @@
   --border:      #e2e8f0;
   --text:        #1e293b;
   --text-muted:  #64748b;
-  --positive:    #16a34a;
-  --negative:    #dc2626;
+  --positive:    #166534;
+  --negative:    #b91c1c;
   --accent-a:    #2563eb;
   --accent-b:    #7c3aed;
-  --mock-badge:  #f97316;
+  --mock-badge:  #c2410c;
   --radius:      8px;
   --shadow:      0 1px 3px rgba(0,0,0,0.08);
 }
@@ -20,7 +20,16 @@
   --border:     #334155;
   --text:       #f1f5f9;
   --text-muted: #94a3b8;
+  --positive:   #4ade80;
+  --negative:   #f87171;
+  --accent-a:   #60a5fa;
+  --accent-b:   #a78bfa;
+  color:        var(--text);
+  background:   var(--bg);
 }
+
+.dark .risk-banner.ok      { background: #052e16; border-color: #166534; }
+.dark .risk-banner.flagged { background: #450a0a; border-color: #7f1d1d; }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
