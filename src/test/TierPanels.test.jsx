@@ -21,9 +21,10 @@ const t3 = {
 }
 
 const t4 = {
-  unit_cost_per_feature: { value: 280,    is_mock: true },
-  token_roi:             { value: 4.2,    is_mock: true },
-  labor_arbitrage_value: { value: 12400,  is_mock: true },
+  unit_cost_per_feature:    { value: 280,   is_mock: true },
+  token_roi:                { value: 4.2,   is_mock: true },
+  labor_arbitrage_value:    { value: 12400, is_mock: true },
+  legacy_modernization_roi: { value: 0.38,  is_mock: true },
 }
 
 describe('Tier1Panel', () => {
@@ -97,5 +98,15 @@ describe('Tier4Panel', () => {
   it('renders labor arbitrage with locale formatting', () => {
     render(<Tier4Panel data={t4} />)
     expect(screen.getByText('$12,400')).toBeInTheDocument()
+  })
+
+  it('renders legacy modernization ROI as percentage (0.38 → 38%)', () => {
+    render(<Tier4Panel data={t4} />)
+    expect(screen.getByText('38%')).toBeInTheDocument()
+  })
+
+  it('renders Legacy Modernization ROI card label', () => {
+    render(<Tier4Panel data={t4} />)
+    expect(screen.getByText('Legacy Modernization ROI')).toBeInTheDocument()
   })
 })

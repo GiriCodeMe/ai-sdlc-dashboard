@@ -66,6 +66,12 @@
       "unit": "USD/month",
       "source": "manual-estimate",
       "is_mock": true
+    },
+    "legacy_modernization_roi": {
+      "value": 0.38,
+      "unit": "ratio",
+      "source": "manual-estimate",
+      "is_mock": true
     }
   },
   "space_framework": {

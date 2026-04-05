@@ -25,6 +25,15 @@ export default function Tier4Panel({ data }) {
         isMock={data.labor_arbitrage_value.is_mock}
         colorClass="accent-b"
       />
+      {data.legacy_modernization_roi && (
+        <TierCard
+          label="Legacy Modernization ROI"
+          value={`${(data.legacy_modernization_roi.value * 100).toFixed(0)}%`}
+          unit="AI refactor cost vs manual rewrite"
+          isMock={data.legacy_modernization_roi.is_mock}
+          colorClass="accent-b"
+        />
+      )}
     </div>
   )
 }
