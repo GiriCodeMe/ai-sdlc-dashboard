@@ -2,8 +2,8 @@
   "meta": {
     "project": "roi-calculator",
     "repo": "GiriCodeMe/roi-calculator",
-    "collected_at": "2026-04-05T00:06:36.089Z",
-    "ci_run_id": "23990249018",
+    "collected_at": "2026-04-05T00:34:56.496Z",
+    "ci_run_id": "23990761122",
     "schema_version": "1.0.0"
   },
   "tier1_input": {
@@ -83,7 +83,7 @@
     },
     "activity": {
       "commits_last_30d": {
-        "value": 33,
+        "value": 34,
         "unit": "count",
         "source": "github-api-commits",
         "is_mock": false
@@ -154,66 +154,66 @@
     },
     "unit_tests": {
       "total": {
-        "value": 0,
+        "value": 124,
         "unit": "count",
-        "source": "vitest-results.json missing",
-        "is_mock": true
+        "source": "vitest-results.json",
+        "is_mock": false
       },
       "passed": {
-        "value": 0,
+        "value": 124,
         "unit": "count",
-        "source": "vitest-results.json missing",
-        "is_mock": true
+        "source": "vitest-results.json",
+        "is_mock": false
       },
       "failed": {
         "value": 0,
         "unit": "count",
-        "source": "vitest-results.json missing",
-        "is_mock": true
+        "source": "vitest-results.json",
+        "is_mock": false
       },
       "coverage_lines": {
-        "value": 0,
+        "value": 100,
         "unit": "percent",
-        "source": "coverage-summary.json missing",
-        "is_mock": true
+        "source": "coverage-summary.json",
+        "is_mock": false
       },
       "coverage_branches": {
-        "value": 0,
+        "value": 96.22,
         "unit": "percent",
-        "source": "coverage-summary.json missing",
-        "is_mock": true
+        "source": "coverage-summary.json",
+        "is_mock": false
       },
       "coverage_functions": {
-        "value": 0,
+        "value": 97.14,
         "unit": "percent",
-        "source": "coverage-summary.json missing",
-        "is_mock": true
+        "source": "coverage-summary.json",
+        "is_mock": false
       },
       "coverage_statements": {
-        "value": 0,
+        "value": 98.23,
         "unit": "percent",
-        "source": "coverage-summary.json missing",
-        "is_mock": true
+        "source": "coverage-summary.json",
+        "is_mock": false
       }
     },
     "e2e_tests": {
       "total": {
-        "value": 0,
+        "value": 9,
         "unit": "count",
-        "source": "playwright-results.json missing",
-        "is_mock": true
+        "source": "playwright-results.json",
+        "is_mock": false
       },
       "passed": {
-        "value": 0,
+        "value": 9,
         "unit": "count",
-        "source": "playwright-results.json missing",
-        "is_mock": true
+        "source": "playwright-results.json",
+        "is_mock": false
       },
       "failed": {
         "value": 0,
         "unit": "count",
-        "source": "playwright-results.json missing",
-        "is_mock": true
+        "source": "playwright-results.json",
+        "is_mock": false
       },
       "coverage_lines": {
         "value": 0,
