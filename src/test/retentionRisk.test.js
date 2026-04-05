@@ -5,7 +5,7 @@ function makeMetrics(acceptanceRate, failureRate, orchestrationRatio) {
   return {
     tier1_input: { ai_acceptance_rate: { value: acceptanceRate } },
     tier3_output: { ai_change_failure_rate: { value: failureRate } },
-    orchestration_value: { ratio: orchestrationRatio },
+    orchestration_value: { ratio: { value: orchestrationRatio } },
   }
 }
 

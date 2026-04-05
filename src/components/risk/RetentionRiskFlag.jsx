@@ -21,7 +21,7 @@ export default function RetentionRiskFlag({ metrics }) {
     {
       label:     'Low Orchestration Value (ratio < 0.005)',
       met:       risk.low_orchestration_value,
-      value:     metrics.orchestration_value.ratio.toFixed(4),
+      value:     metrics.orchestration_value.ratio.value.toFixed(4),
       threshold: '< 0.005',
     },
   ]
