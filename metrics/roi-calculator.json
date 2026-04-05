@@ -2,8 +2,8 @@
   "meta": {
     "project": "roi-calculator",
     "repo": "GiriCodeMe/roi-calculator",
-    "collected_at": "2026-04-05T00:34:56.496Z",
-    "ci_run_id": "23990761122",
+    "collected_at": "2026-04-05T00:47:06.291Z",
+    "ci_run_id": "23990967517",
     "schema_version": "1.0.0"
   },
   "tier1_input": {
@@ -83,7 +83,7 @@
     },
     "activity": {
       "commits_last_30d": {
-        "value": 34,
+        "value": 35,
         "unit": "count",
         "source": "github-api-commits",
         "is_mock": false
@@ -216,28 +216,28 @@
         "is_mock": false
       },
       "coverage_lines": {
-        "value": 0,
+        "value": 98.94,
         "unit": "percent",
-        "source": "coverage-e2e missing",
-        "is_mock": true
+        "source": "coverage-e2e/coverage-summary.json",
+        "is_mock": false
       },
       "coverage_branches": {
-        "value": 0,
+        "value": 87,
         "unit": "percent",
-        "source": "coverage-e2e missing",
-        "is_mock": true
+        "source": "coverage-e2e/coverage-summary.json",
+        "is_mock": false
       },
       "coverage_functions": {
-        "value": 0,
+        "value": 91.42,
         "unit": "percent",
-        "source": "coverage-e2e missing",
-        "is_mock": true
+        "source": "coverage-e2e/coverage-summary.json",
+        "is_mock": false
       },
       "coverage_statements": {
-        "value": 0,
+        "value": 96.46,
         "unit": "percent",
-        "source": "coverage-e2e missing",
-        "is_mock": true
+        "source": "coverage-e2e/coverage-summary.json",
+        "is_mock": false
       }
     },
     "a11y_tests": {
@@ -263,23 +263,30 @@
     },
     "lighthouse": {
       "performance": {
-        "value": 0,
+        "value": 93,
         "unit": "score",
-        "source": "lighthouse-artifact missing",
-        "is_mock": true
+        "source": "lighthouse",
+        "is_mock": false
       },
       "accessibility": {
-        "value": 0,
+        "value": 100,
         "unit": "score",
-        "source": "lighthouse-artifact missing",
-        "is_mock": true
+        "source": "lighthouse",
+        "is_mock": false
       },
       "best_practices": {
-        "value": 0,
+        "value": 96,
         "unit": "score",
-        "source": "lighthouse-artifact missing",
-        "is_mock": true
-      }
+        "source": "lighthouse",
+        "is_mock": false
+      },
+      "seo": {
+        "value": 82,
+        "unit": "score",
+        "source": "lighthouse",
+        "is_mock": false
+      },
+      "is_mock": false
     }
   },
   "heatmap_series": [
